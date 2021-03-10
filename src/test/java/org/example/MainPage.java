@@ -7,7 +7,7 @@ import static com.codeborne.selenide.Selenide.$x;
 public class MainPage {
     SelenideElement loginField = $x("//*[@class = 'login']");
 
-    public void pressSignIn(){
+    public void goToSignInPage(){
         loginField.pressEnter();
     }
 }
