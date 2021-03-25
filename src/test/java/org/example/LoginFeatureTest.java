@@ -1,8 +1,8 @@
 package org.example;
 
 import com.codeborne.selenide.Condition;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -18,7 +18,7 @@ public class LoginFeatureTest {
     String password = "";
     String userName = "";
 
-    @BeforeEach
+    @Before
     public void startUp() throws Exception {
 
         File file = new File("test.properties");
@@ -47,7 +47,7 @@ public class LoginFeatureTest {
     }
 
     @ParameterizedTest
-    @ValueSource (strings = {"1222222"," ","~!@##$%%^&^&**(","/r"})
+    @ValueSource (strings = {"1222222","12345678","~!@#$%^&*()_+|?><","/r"})
     public void loginWithIncorrectPassword(String incorrectPassword){
         open(url);
         new MainPage().goToSignInPage();
@@ -57,6 +57,17 @@ public class LoginFeatureTest {
         loginPage.pressSubmitButton();
         loginPage.getAuthenticationField().isDisplayed();// we are on the same page
         loginPage.getErrorField().shouldHave(Condition.text("Authentication failed"));
+    }
+
+    @Test
+    public void loginWithoutPassword(){
+        open(url);
+        new MainPage().goToSignInPage();
+        LoginPage loginPage = new LoginPage();
+        loginPage.setEmail(registeredEmail);
+        loginPage.pressSubmitButton();
+        loginPage.getAuthenticationField().isDisplayed();
+        loginPage.getErrorField().shouldHave(Condition.text("Password is required"));
     }
 
     @Test
