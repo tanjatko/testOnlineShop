@@ -1,7 +1,6 @@
 package org.example;
 
 import com.codeborne.selenide.Condition;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,11 +45,6 @@ public class LoginFeatureTest {
         accountPage.getAccountField().isDisplayed();
         accountPage.getAccountNameField().shouldHave(Condition.text(userName));
     }
-//    @ParameterizedTest
-//    @ValueSource(strings = { "racecar", "radar", "able was I ere I saw elba" })
-//    void palindromes(String candidate) {
-//        assertTrue(StringUtils.isPalindrome(candidate));
-//    }
 
     @ParameterizedTest
     @ValueSource (strings = {"1222222"," ","~!@##$%%^&^&**(","/r"})
