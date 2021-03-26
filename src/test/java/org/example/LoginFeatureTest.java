@@ -1,8 +1,7 @@
 package org.example;
 
 import com.codeborne.selenide.Condition;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -10,15 +9,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LoginFeatureTest {
     String url = "";
     String registeredEmail = "";
     String password = "";
     String userName = "";
 
-    @Before
+    @BeforeEach
     public void startUp() throws Exception {
 
         File file = new File("test.properties");
@@ -32,7 +32,14 @@ public class LoginFeatureTest {
         password = properties.getProperty("password");
         userName = properties.getProperty("userName");
     }
+
+    @AfterEach
+    public void shutDown(){
+        closeWebDriver();
+    }
+
     @Test
+    @Order(1)
     public void login() {
         open(url);
         new MainPage().goToSignInPage();
@@ -47,7 +54,8 @@ public class LoginFeatureTest {
     }
 
     @ParameterizedTest
-    @ValueSource (strings = {"1222222","12345678","~!@#$%^&*()_+|?><","/r"})
+    @Order(5)
+    @ValueSource (strings = {"1222222","12345678","~!@#$%^&*()_+|?><"})
     public void loginWithIncorrectPassword(String incorrectPassword){
         open(url);
         new MainPage().goToSignInPage();
@@ -60,6 +68,7 @@ public class LoginFeatureTest {
     }
 
     @Test
+    @Order(3)
     public void loginWithoutPassword(){
         open(url);
         new MainPage().goToSignInPage();
@@ -71,6 +80,7 @@ public class LoginFeatureTest {
     }
 
     @Test
+    @Order(4)
     public void loginWithIncorrectEmail(){
         open(url);
         new MainPage().goToSignInPage();
@@ -83,6 +93,7 @@ public class LoginFeatureTest {
     }
 
     @Test
+    @Order(2)
     public void logout(){
         login();
         new AccountPage().getSignoutField().pressEnter();
